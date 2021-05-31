@@ -40,6 +40,18 @@ int main(){
         tree.add(x[i]);
     }
 
-
+    tree.pretty_print_rotate();
+    cout << "\nDelete element aabc\n";
+    tree.del("aabc");
+    tree.pretty_print_rotate();
+    cout << "\nDelete element ads\n";
+    try{
+        tree.del("ads");
+    }
+    catch(TreeException e){
+        cout << e.what() << endl;
+    }
+    cout << "\nDelete element assss\n";
+    tree.del("assss");
     tree.pretty_print_rotate();
 }

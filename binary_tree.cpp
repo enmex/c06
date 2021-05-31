@@ -5,7 +5,6 @@ binary_tree::binary_tree() : root(nullptr), size(1) {
     height = 0;
     btree = new treenode;
     btree->field = "";
-    btree->deleted = false;
     btree->num = 0;
     btree->right = nullptr;
     btree->left = nullptr;
@@ -39,6 +38,7 @@ binary_tree binary_tree::operator=(const binary_tree& tree){
 
 void binary_tree::setRoot(std::string x){
     root->field = x;
+    root->num = 1;
 }
 
 void binary_tree::add(std::string x){
@@ -92,12 +92,12 @@ std::vector<int> binary_tree::find(std::string x){
 }
 
 void binary_tree::pretty_print_rotate(treenode* point, int level){
-    if(point){
+    if(point!=nullptr){
         pretty_print_rotate(point->right, level+1);
         for(int i = 0; i < level; i++) {std::cout << "\t";}
-        if (!point->deleted) {
-            std::cout << point->field.c_str() << "(" << point->num << ")" << std::endl;
-        }
+        if(point->num)
+            std::cout << point->field.c_str() << "(" << point->num << ")";
+        std::cout << std::endl;
         pretty_print_rotate(point->left, level+1);
     }
 }
@@ -115,14 +115,12 @@ void binary_tree::add(treenode* node, std::string x)
         temp->field = x;
         temp->num = 1;
         temp->right = temp->left = nullptr;
-        temp->deleted = false;
         node->left = temp;
     }
     if (node->right == nullptr && x > node->field) {
         temp->field = x;
         temp->num = 1;
         temp->right = temp->left = nullptr;
-        temp->deleted = false;
         node->right = temp;
     }
     temp = nullptr;
@@ -134,8 +132,7 @@ void binary_tree::pretty_print_rotate(){
 
 bool binary_tree::del(std::string x)
 {
-    std::vector<int> path;
-    find(x, root, path);
+    std::vector<int> path = find(x);
     if (path[0] == -1) {
         return false;
     }
@@ -148,6 +145,15 @@ bool binary_tree::del(std::string x)
             btree = btree->left;
         }
     }
-    btree->deleted = true;
+    if(btree->num>1){
+        btree->num--;
+    }
+    else{
+        size--;
+        if(btree->right != nullptr || btree->left != nullptr){
+            throw TreeException("Unable to delete element");
+        }
+        btree->num = 0;
+    }
     return true;
 }

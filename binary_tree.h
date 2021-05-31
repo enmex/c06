@@ -6,7 +6,6 @@
 #include <iomanip>
 
 struct treenode{
-    bool deleted;
     std::string field;
     int num;
     treenode *left, *right;
@@ -19,6 +18,7 @@ private:
     treenode* root;
     int size;
     int height;
+    std::vector<int> deleted_nodes;
 public:
     binary_tree();
     binary_tree(const binary_tree&);
